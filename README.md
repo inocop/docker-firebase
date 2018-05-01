@@ -17,10 +17,24 @@ $ firebase init
 
 $ cd sample-chat
 $ vue init nuxt-community/starter-template
+$ npm install 
 ```
 
 ## Debug run
 ```
-$ firebase serve -p 5000 -o 0.0.0.0
+$ cd /var/app/sample-chat
+$ npm run dev
+
+$ firebase serve -p 5000 -o 0.0.0.0 --only functions 
 ```
+
+http://localhost:5000
+
+
+## Deploy
+```
+$ cd /var/app
+$ firebase deploy
+```
+
 
