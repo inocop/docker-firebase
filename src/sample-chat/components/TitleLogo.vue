@@ -13,8 +13,8 @@
 
 .title-logo__image
 {
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
 }
 
 .title-logo__text

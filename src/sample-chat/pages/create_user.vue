@@ -4,9 +4,7 @@
     <TitleLogo/>
 
     <div>
-
-      <p>新規登録</p>
-
+      <p class="subtitle">新規登録</p>
       <div class="field">
         <label class="label">UserName</label>
         <div class="control">
@@ -54,17 +52,26 @@ export default {
   },
   methods: {
     create_user: function () {
+      const self = this
+
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
         user => {
-          alert('Create account: ', user.email)
-          this.$router.push('/')
+          user.displayName = self.username
+          user.updateProfile({
+            displayName: self.username
+          }).then(function() {
+            self.$router.push('/')
+          }).catch(function(error) {
+            console.log(error)
+            alert(error.mesage)
+          });
         },
         err => {
+          console.log(err)
           alert(err.message)
         }
       )
     },
-
   },
   components: {
     TitleLogo
@@ -76,9 +83,16 @@ export default {
 
 .login-container {
   margin: auto;
-  margin-top: 50px;
   width: 500px;
   padding: 100px;
+}
+
+.subtitle {
+  font-weight: 500;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 0px;
+  font-size: 1.25rem;
 }
 
 </style>

@@ -18,6 +18,9 @@
         </a>
       </div>
       <div class="navbar-end">
+        <div v-if="isLogin" class="navbar-item">
+          Hello! {{ currentUser.displayName }}
+        </div>
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
@@ -35,10 +38,16 @@
 import firebase from '~/plugins/firebase'
 
 export default {
+  data() {
+    return {
+      isLogin: false,
+      currentUser: null,
+    }
+  },
   methods: {
     logout: function(){
       firebase.auth().signOut().then(function() {
-        $nuxt.$router.push('/login')
+        // $nuxt.$router.push('/login')
       }).catch(function(error) {
         // An error happened.
         alert(error.message);
@@ -46,9 +55,14 @@ export default {
     }
   },
   created: function(){
+    const self = this
     firebase.auth().onAuthStateChanged(function(user) {
-      if (!user) {
-        $nuxt.$router.push('/login')
+      if (user) {
+        console.log(user)
+        self.isLogin = true
+        self.currentUser = user
+      } else {
+        self.$router.push('/login')
       }
     });
   },

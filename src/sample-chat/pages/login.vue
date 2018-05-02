@@ -56,7 +56,6 @@ export default {
     login: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         user => {
-          alert('Success!')
           $nuxt.$router.push('/')
         },
         err => {
@@ -72,12 +71,11 @@ export default {
   components: {
     TitleLogo
   },
-  created: function() {
+  async mounted () {
+    const self = this
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        $nuxt.$router.push('/')
-      } else {
-        // No user is signed in.
+        self.$router.push('/')
       }
     });
   }
@@ -89,7 +87,6 @@ export default {
 
 .login-container {
   margin: auto;
-  margin-top: 50px;
   width: 500px;
   padding: 100px;
 }
