@@ -1,8 +1,18 @@
 # docker-firebase
 
-## Project setup
 
+## Project Setup
+
+### Docker Setup
+
+```shell
+$ git clone git@github.com:inocop/docker-firebase.git
+$ cd docker-firebase
+$ docker-compose up -d
 ```
+
+### Firebase Setup
+
 $ docker exec -it dockerfirebase_node_1 ash
 $ cd /var/app
 $ firebase login
