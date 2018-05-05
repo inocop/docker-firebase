@@ -5,7 +5,7 @@
     <div>
       <p>Room List</p>
 
-      <button @click="createRoom">Create Room!</button><br>
+      <RoomCreateButton v-bind:isCreatable="isCreatable"></RoomCreateButton>
 
       <div v-if="rooms">
         <RoomLink v-for="room in rooms" v-bind:key="room.key" v-bind:room="room"></RoomLink>
@@ -38,53 +38,34 @@
 
 <script>
 //import AppLogo from '~/components/AppLogo.vue'
-import NavBar from '~/components/NavBar.vue'
-import RoomLink from '~/components/RoomLink.vue'
+import NavBar from '~/components/NavBar.vue';
+import RoomLink from '~/components/RoomLink.vue';
+import RoomCreateButton from '~/components/RoomCreateButton.vue';
+import RoomStore from '~/store/RoomStore';
 import firebase from '~/plugins/firebase'
 
-const database = firebase.database();
-const roomsRef = database.ref('/rooms');
-
+const store = RoomStore();
 export default {
-  data: function () {
-      return { rooms: [], };
+  data: function() {
+    return {
+      isCreatable: false,
+    };
+  },
+  computed: {
+    rooms () {
+      return store.state.rooms;
+    }
   },
   components: {
     NavBar,
-    RoomLink
-  },
-  methods:{
-    createRoom: () => {
-
-      const user = firebase.auth().currentUser
-
-      roomsRef.push({
-        create_user_id: user.uid,
-        create_user_name: user.displayName,
-        create_at: new Date().getTime()
-      }).then((res) => {
-          console.log(res);
-      })
-    },
+    RoomLink,
+    RoomCreateButton,
   },
   mounted: function(){
-    this.rooms = []
-
-    roomsRef.once('value').then((snapshot) => {
-
-      var tmp_rooms = {};
-      snapshot.forEach((data) => {
-        console.log(data.key)
-        console.log(data.val())
-
-        tmp_rooms.key = data.key
-        tmp_rooms.create_user_id = data.val().create_user_id
-        this.rooms.push(tmp_rooms)
-      });
-
-      //console.log(self.rooms)
-
-    })
+    store.dispatch('checkout');
+    firebase.auth().onAuthStateChanged((user) => {
+      this.isCreatable = (store.getters.getByCreateUserId(user.uid) === undefined);
+    });
   }
 
 }

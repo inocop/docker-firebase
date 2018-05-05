@@ -1,6 +1,6 @@
 <template>
   <div class="room_item">
-    {{ room.create_user_id }}
+    {{ room.createUserId }}
   </div>
 </template>
 
