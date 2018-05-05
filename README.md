@@ -56,8 +56,8 @@ sample-chat/dist
 #### Setup nuxt.js
 
 ```shell
-# cd sample-chat
-# npm install
+$ cd {{ project-path }}/src/sample-chat/
+$ npm install
 ```
 
 ## Debug run
