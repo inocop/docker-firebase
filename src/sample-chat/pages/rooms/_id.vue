@@ -20,6 +20,7 @@ export default {
       </ul>
 
       <MessageInputer />
+      <router-link :to="{ name: 'login' }">Room list</router-link>
     </div>
   </section>
 </div>
