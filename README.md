@@ -50,7 +50,15 @@ Then log in with a registered google account on Firebase.
 > ◯ Storage: Deploy Cloud Storage security rules
 
 > ? What do you want to use as your public directory? [sample-chat]
+sample-chat/dist
+```
 
+#### @deplicated: init nuxt.js
+
+The setting here is probably unnecessary.
+Application breaks
+
+```shell
 # cd sample-chat
 # vue init nuxt-community/starter-template
 # npm install 
