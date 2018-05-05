@@ -1,5 +1,6 @@
 # docker-firebase
 
+Vue.js chat sample using firebase
 
 ## Project Setup
 
