@@ -10,9 +10,9 @@ export default () => new Vuex.Store({
   state: {
     rooms: [],
   },
+  strict: true,
   mutations: {
     push(state, room) {
-      console.log(room);
       state.rooms.push(room);
     },
     clean(state) {
@@ -27,11 +27,12 @@ export default () => new Vuex.Store({
   actions: {
     checkout({commit}) {
       commit('clean');
-      roomsRef.on('value', snapshot => {
+      roomsRef.once('value').then(snapshot => {
         snapshot.forEach(data => {
           commit('push', {
             key: data.key,
-            createUserId: data.val().create_user_id,
+            createUserId: data.val().createUserId,
+            createUserName: data.val().createUserName,
           });
         });
       });
@@ -40,7 +41,7 @@ export default () => new Vuex.Store({
       const user = firebase.auth().currentUser;
 
       const row = getters.getByCreateUserId(user.uid);
-      if (!row) {
+      if (row) {
         return;
       }
 
@@ -49,7 +50,6 @@ export default () => new Vuex.Store({
         createUserName: user.displayName,
         createAt: new Date().getTime(),
       }).then((res) => {
-        console.log(res);
         dispatch('checkout');
       });
     }
