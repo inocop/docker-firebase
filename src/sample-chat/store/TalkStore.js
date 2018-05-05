@@ -41,12 +41,6 @@ export default () => new Vuex.Store({
       const talkRef = talksRef.child(talkKey);
       commit('setTalkKey', talkKey);
 
-      talkRef.once('value').then(snapshot => {
-        snapshot.forEach(data => {
-          dispatch('firebaseStoreDataPush', data);
-        });
-      });
-
       talkRef.on('child_added', data => {
         dispatch('firebaseStoreDataPush', data);
       });
