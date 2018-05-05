@@ -53,15 +53,11 @@ Then log in with a registered google account on Firebase.
 sample-chat/dist
 ```
 
-#### @deplicated: init nuxt.js
-
-The setting here is probably unnecessary.
-Application breaks
+#### Setup nuxt.js
 
 ```shell
 # cd sample-chat
-# vue init nuxt-community/starter-template
-# npm install 
+# npm install
 ```
 
 ## Debug run
