@@ -8,9 +8,7 @@
       <button @click="createRoom">Create Room!</button><br>
 
       <div v-if="rooms">
-        <div v-for="room in rooms" :key="room['key']">
-         {{ room.create_user_id }}
-       </div>
+        <RoomLink v-for="room in rooms" v-bind:key="room.key" v-bind:room="room"></RoomLink>
       </div>
 
       <!--
@@ -41,52 +39,51 @@
 <script>
 //import AppLogo from '~/components/AppLogo.vue'
 import NavBar from '~/components/NavBar.vue'
+import RoomLink from '~/components/RoomLink.vue'
 import firebase from '~/plugins/firebase'
 
 const database = firebase.database();
 const roomsRef = database.ref('/rooms');
 
 export default {
-  data(){
-      rooms: null
+  data: function () {
+      return { rooms: [], };
   },
   components: {
-    NavBar
+    NavBar,
+    RoomLink
   },
   methods:{
-    createRoom: function() {
+    createRoom: () => {
 
-      var user = firebase.auth().currentUser
-      console.log(user)
+      const user = firebase.auth().currentUser
 
       roomsRef.push({
         create_user_id: user.uid,
         create_user_name: user.displayName,
         create_at: new Date().getTime()
-      }).then(function (res) {
+      }).then((res) => {
           console.log(res);
       })
     },
   },
   mounted: function(){
-    const self = this
-    self.rooms = []
+    this.rooms = []
 
-    roomsRef.once('value').then(function(snapshot) {
-      //console.log(snapshot.val())
+    roomsRef.once('value').then((snapshot) => {
 
-      var tmp_rooms = []
-      snapshot.forEach(function(data) {
+      var tmp_rooms = {};
+      snapshot.forEach((data) => {
         console.log(data.key)
         console.log(data.val())
 
         tmp_rooms.key = data.key
         tmp_rooms.create_user_id = data.val().create_user_id
-        self.rooms.push(tmp_rooms)
+        this.rooms.push(tmp_rooms)
       });
 
       //console.log(self.rooms)
-      
+
     })
   }
 
