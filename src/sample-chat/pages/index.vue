@@ -46,26 +46,23 @@ import firebase from '~/plugins/firebase'
 
 const store = RoomStore();
 export default {
-  data: function() {
-    return {
-      isCreatable: false,
-    };
-  },
   computed: {
     rooms () {
-      return store.state.rooms;
+      return this.$store.state.rooms;
+    },
+    isCreatable() {
+      const user = firebase.auth().currentUser;
+      return (user && ! this.$store.getters.getByCreateUserId(user.uid));
     }
   },
+  store,
   components: {
     NavBar,
     RoomLink,
     RoomCreateButton,
   },
   mounted: function(){
-    store.dispatch('checkout');
-    firebase.auth().onAuthStateChanged((user) => {
-      this.isCreatable = (store.getters.getByCreateUserId(user.uid) === undefined);
-    });
+    this.$store.dispatch('checkout');
   }
 
 }

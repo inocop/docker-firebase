@@ -6,13 +6,11 @@
 
 
 <script>
-import RoomStore from '~/store/RoomStore';
-
 export default {
   props: ['isCreatable'],
   methods:{
-    createRoom: () => {
-      RoomStore().dispatch('create');
+    createRoom: function () {
+      this.$store.dispatch('create');
     },
   },
 }
