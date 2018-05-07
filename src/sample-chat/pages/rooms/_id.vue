@@ -1,15 +1,5 @@
 <template>
 <div>
-<h1>{{id}}</h1>
-</div>
-</template>
-
-<script>
-export default {
-}
-</script>
-<template>
-<div>
   <NavBar/>
   <section class="container">
     <div>
@@ -20,7 +10,7 @@ export default {
       </ul>
 
       <MessageInputer />
-      <router-link :to="{ name: 'login' }">Room list</router-link>
+      <router-link :to="{ path: '/' }">Room list</router-link>
     </div>
   </section>
 </div>
