@@ -5,12 +5,10 @@
     <div>
       <p>Room List</p>
 
-      <button @click="createRoom">Create Room!</button><br>
+      <RoomCreateButton v-bind:isCreatable="isCreatable"></RoomCreateButton>
 
       <div v-if="rooms">
-        <div v-for="room in rooms" :key="room['key']">
-         {{ room.create_user_id }}
-       </div>
+        <RoomLink v-for="room in rooms" v-bind:key="room.key" v-bind:room="room"></RoomLink>
       </div>
 
       <!--
@@ -40,54 +38,31 @@
 
 <script>
 //import AppLogo from '~/components/AppLogo.vue'
-import NavBar from '~/components/NavBar.vue'
+import NavBar from '~/components/NavBar.vue';
+import RoomLink from '~/components/RoomLink.vue';
+import RoomCreateButton from '~/components/RoomCreateButton.vue';
+import RoomStore from '~/store/RoomStore';
 import firebase from '~/plugins/firebase'
 
-const database = firebase.database();
-const roomsRef = database.ref('/rooms');
-
+const store = RoomStore();
 export default {
-  data(){
-      rooms: null
-  },
-  components: {
-    NavBar
-  },
-  methods:{
-    createRoom: function() {
-
-      var user = firebase.auth().currentUser
-      console.log(user)
-
-      roomsRef.push({
-        create_user_id: user.uid,
-        create_user_name: user.displayName,
-        create_at: new Date().getTime()
-      }).then(function (res) {
-          console.log(res);
-      })
+  computed: {
+    rooms () {
+      return this.$store.state.rooms;
     },
+    isCreatable() {
+      const user = firebase.auth().currentUser;
+      return (user && ! this.$store.getters.getByCreateUserId(user.uid));
+    }
+  },
+  store,
+  components: {
+    NavBar,
+    RoomLink,
+    RoomCreateButton,
   },
   mounted: function(){
-    const self = this
-    self.rooms = []
-
-    roomsRef.once('value').then(function(snapshot) {
-      //console.log(snapshot.val())
-
-      var tmp_rooms = []
-      snapshot.forEach(function(data) {
-        console.log(data.key)
-        console.log(data.val())
-
-        tmp_rooms.key = data.key
-        tmp_rooms.create_user_id = data.val().create_user_id
-        self.rooms.push(tmp_rooms)
-      });
-
-      //console.log(self.rooms)
-      
-    })
+    this.$store.dispatch('checkout');
   }
 
 }
