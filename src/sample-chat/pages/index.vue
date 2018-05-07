@@ -1,43 +1,23 @@
 <template>
 <div>
-  <NavBar/>
+  <NavBar v-bind:is-login="isLogin" v-bind:current-user="currentUser"/>
+
+  <section class="container">
+    <h1 class="subtitle">Room List</h1>
+    <RoomCreateButton class="create-button" v-bind:is-creatable="isCreatable"></RoomCreateButton>
+  </section>
+
   <section class="container">
     <div>
-      <p>Room List</p>
-
-      <RoomCreateButton v-bind:isCreatable="isCreatable"></RoomCreateButton>
-
       <div v-if="rooms">
         <RoomLink v-for="room in rooms" v-bind:key="room.key" v-bind:room="room"></RoomLink>
       </div>
-
-      <!--
-      <app-logo/>
-      <h1 class="title">
-        sample-chat
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-      -->
-
     </div>
   </section>
 </div>
 </template>
 
 <script>
-//import AppLogo from '~/components/AppLogo.vue'
 import NavBar from '~/components/NavBar.vue';
 import RoomLink from '~/components/RoomLink.vue';
 import RoomCreateButton from '~/components/RoomCreateButton.vue';
@@ -46,6 +26,12 @@ import firebase from '~/plugins/firebase'
 
 const store = RoomStore();
 export default {
+  data(){
+    return{
+      isLogin: false,
+      currentUser: null
+    }
+  },
   computed: {
     rooms () {
       return this.$store.state.rooms;
@@ -62,19 +48,34 @@ export default {
     RoomCreateButton,
   },
   mounted: function(){
+    const self = this
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log(user)
+        self.isLogin = true
+        self.currentUser = user
+      } else {
+        self.$router.push('/login')
+      }
+    });
+    
     this.$store.dispatch('checkout');
   }
-
 }
 </script>
 
-<style>
+<style scoped>
 .container {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   text-align: center;
+}
+
+.create-button {
+  margin-left: 30px;
+  margin-top: 10px;
 }
 
 .title {
@@ -91,7 +92,7 @@ export default {
   font-size: 42px;
   color: #526488;
   word-spacing: 5px;
-  padding-bottom: 15px;
+  margin-bottom: 0;
 }
 
 .links {

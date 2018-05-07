@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 
 .login-container {
   margin: auto;

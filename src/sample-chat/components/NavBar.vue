@@ -34,7 +34,6 @@
   font-weight: 300;
   color: #35495e;
 }
-
 </style>
 
 
@@ -42,12 +41,7 @@
 import firebase from '~/plugins/firebase'
 
 export default {
-  data() {
-    return {
-      isLogin: false,
-      currentUser: null,
-    }
-  },
+  props: ['isLogin', 'currentUser'],
   methods: {
     logout: function(){
       firebase.auth().signOut().then(function() {
@@ -57,18 +51,6 @@ export default {
         alert(error.message);
       });
     }
-  },
-  created: function(){
-    const self = this
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        console.log(user)
-        self.isLogin = true
-        self.currentUser = user
-      } else {
-        self.$router.push('/login')
-      }
-    });
   },
   mounted: function(){
     // Get all "navbar-burger" elements

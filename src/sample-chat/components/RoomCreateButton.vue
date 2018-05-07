@@ -1,6 +1,6 @@
 <template>
   <div v-if="isCreatable">
-    <button @click="createRoom">Create Room!</button>
+    <button class="button is-primary" @click="createRoom">Create Room!</button>
   </div>
 </template>
 
